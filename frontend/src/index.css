@@ -1,0 +1,256 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes slide {
+  0% { transform: translateX(-140%); }
+  100% { transform: translateX(420%); }
+}
+
+@keyframes successPop {
+  0% { opacity: 0; transform: scale(0.4); }
+  70% { opacity: 1; transform: scale(1.15); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@layer base {
+  :root {
+    --primary-blue: #00599F;
+    --dark-blue: #033392;
+    --text-primary: #1A1A1A;
+    --text-secondary: #464747;
+    --background: #FFFFFF;
+    --surface-light: #F1F3FA;
+    --surface-blue: #DBEFFD;
+    --border: #E3EAF7;
+    --accent-orange: #F47317;
+    --accent-light-blue: #A3D6FF;
+    --font-scale: 100%;
+    --line-height-scale: 1.5;
+    --letter-spacing: normal;
+  }
+
+  html {
+    font-size: var(--font-scale);
+    letter-spacing: var(--letter-spacing);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+    line-height: var(--line-height-scale);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Dark Mode Theme */
+  html.dark {
+    --background: #0B132B;
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --surface-light: #1C2541;
+    --surface-blue: #1E293B;
+    --border: #334155;
+    --primary-blue: #38BDF8;
+    --dark-blue: #0284C7;
+  }
+
+  html.dark body {
+    background-color: #0B132B;
+    color: #F1F5F9;
+  }
+
+  html.dark .bg-white {
+    background-color: #162036 !important;
+    color: #F1F5F9 !important;
+    border-color: #334155 !important;
+  }
+
+  html.dark .bg-slate-50,
+  html.dark .bg-gov-surface {
+    background-color: #0F172A !important;
+  }
+
+  html.dark .bg-gov-lightblue {
+    background-color: #1E293B !important;
+    color: #E2E8F0 !important;
+  }
+
+  html.dark .border-gov-border {
+    border-color: #334155 !important;
+  }
+
+  html.dark .text-gov-textPrimary {
+    color: #F8FAFC !important;
+  }
+
+  html.dark .text-gov-textSecondary {
+    color: #94A3B8 !important;
+  }
+
+  /* Accessibility: Font Size Adjustments */
+  html.text-size-sm {
+    --font-scale: 90%;
+  }
+  html.text-size-md {
+    --font-scale: 100%;
+  }
+  html.text-size-lg {
+    --font-scale: 112.5%;
+  }
+  html.text-size-xl {
+    --font-scale: 125%;
+  }
+
+  /* Accessibility: Enhanced Spacing & Line Height */
+  html.enhanced-spacing {
+    --line-height-scale: 1.8;
+    --letter-spacing: 0.05em;
+    word-spacing: 0.1em;
+  }
+
+  /* Accessibility: High Contrast Mode */
+  html.contrast-high {
+    filter: contrast(130%);
+  }
+  html.contrast-high body {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+  }
+  html.contrast-high .bg-white,
+  html.contrast-high .bg-gov-surface,
+  html.contrast-high .bg-slate-50,
+  html.contrast-high .bg-slate-100 {
+    background-color: #111111 !important;
+    color: #FFFFFF !important;
+    border-color: #FBBF24 !important;
+  }
+  html.contrast-high a,
+  html.contrast-high button {
+    color: #FBBF24 !important;
+  }
+  html.contrast-high .bg-gov-blue,
+  html.contrast-high .bg-gov-dark {
+    background-color: #002B4D !important;
+    border-color: #FBBF24 !important;
+  }
+
+  /* Accessibility: Dyslexia Friendly Typography */
+  html.dyslexia-font body {
+    font-family: 'Comic Sans MS', 'Trebuchet MS', 'Arial', sans-serif !important;
+  }
+
+  /* Accessibility: Pause Animations */
+  html.pause-animations *,
+  html.pause-animations *::before,
+  html.pause-animations *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  /* Accessibility: Highlight Links */
+  html.highlight-links a {
+    text-decoration: underline !important;
+    text-decoration-color: #F47317 !important;
+    text-decoration-thickness: 2px !important;
+    font-weight: 600 !important;
+  }
+
+  /* Portal standard custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F1F3FA;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #C4D3EA;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00599F;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* 3D Flip Card Utilities */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
+@layer components {
+  .hero-arrow {
+    @apply absolute top-1/2 -translate-y-1/2 flex h-8 w-8 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white/85 text-gov-blue shadow-portal hover:bg-white;
+  }
+  .carousel-arrow {
+    @apply absolute top-[42%] -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full border border-gov-border bg-white text-gov-blue shadow-portal-hover z-10 hover:bg-gov-lightblue disabled:opacity-30 disabled:cursor-default;
+  }
+  .portal-service-card {
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+  .portal-service-card:hover, .portal-service-card:focus-within {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
+  }
+  .category-back {
+    background: #00599F;
+    color: #fff;
+  }
+  .category-back :is(h3, p, li, a, svg) { color: #fff; }
+  .official-logo-surface { background: #fff; }
+  .journey-step { opacity: 1; }
+  .journey-visible .journey-step { animation: journey-arrive 450ms ease both; animation-delay: var(--step-delay); }
+  @media (min-width: 1024px) {
+    .journey-step:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      top: 2rem;
+      left: calc(50% + 2rem);
+      width: calc(100% - 3rem);
+      border-top: 1px solid #a8c6df;
+    }
+  }
+  @keyframes journey-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+}
+
+/* Keyboard focus stays visible on image controls and independent cards. */
+:focus-visible { outline: 3px solid #F47317; outline-offset: 3px; }
+html.dark :is(.text-gov-dark, .text-gov-blue) { color: #8ccfff; }
+html.dark .category-back, html.dark .category-back :is(h3, p, li, a, svg), html.dark .category-toggle.text-white { color: #fff; }
+html.dark .category-back { background: #00599F; }
+html.enhanced-spacing :is(p, li, h2, h3) { line-height: 1.8 !important; }
+html.pause-animations { scroll-behavior: auto; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+
+.official-logo-surface.department-logo-blue { background: #00599F; padding: 8px; }
+/* Match complete desktop carousel columns; retain a next-card preview on phones. */
+@media (min-width: 640px) { [aria-roledescription="carousel"] .portal-service-card { width: calc((100% - 20px) / 2); } }
+@media (min-width: 768px) { [aria-roledescription="carousel"] .portal-service-card { width: calc((100% - 40px) / 3); } }
+@media (min-width: 1024px) { [aria-roledescription="carousel"] .portal-service-card { width: calc((100% - 60px) / 4); } }
+@media (min-width: 1280px) { [aria-roledescription="carousel"] .portal-service-card { width: calc((100% - 80px) / 5); } }
