@@ -1,3 +1,4 @@
+import { InterDepartmentExchange } from '../components/exchange/InterDepartmentExchange';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -104,20 +105,23 @@ const DepartmentOfficerDashboard: React.FC = () => {
           <div className="space-y-1.5 max-w-2xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-amber-50 text-amber-600 text-xs font-semibold uppercase tracking-wider">
               <ShieldCheck className="w-4 h-4" />
-              <span>Department Operations Console</span>
+              <span>Department Officer</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gov-dark">
-              {user?.name} Dashboard
+              {user?.department}
             </h1>
             <p className="text-xs sm:text-sm text-gov-textSecondary leading-relaxed">
               Manage ongoing tasks, view upcoming applications, and review completed citizen requests for your department.
             </p>
+
           </div>
           <Button variant="primary" onClick={() => setIsAddJobOpen(true)} className="whitespace-nowrap shadow-sm">
             <Plus className="w-4 h-4 mr-2" />
             Post New Job / Form
           </Button>
         </div>
+
+        <InterDepartmentExchange key={user?.id} />
 
         {/* Dashboard Metrics */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -455,7 +459,7 @@ export const AdminPortalPage: React.FC = () => {
   }
 
   if (user?.role === 'department_officer') {
-    return <DepartmentOfficerDashboard />;
+    return <DepartmentOfficerDashboard key={user.id} />;
   }
 
   return (
@@ -484,6 +488,8 @@ export const AdminPortalPage: React.FC = () => {
             </span>
           </div>
         </div>
+
+        <InterDepartmentExchange key={user?.id} />
 
         {/* Telemetry Summary Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

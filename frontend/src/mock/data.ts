@@ -2,37 +2,33 @@ import { User } from '../types/auth.types';
 import { Department } from '../types/department.types';
 import { EmploymentJob, EmploymentApplication } from '../types/employment.types';
 
-export const mockUsers: User[] = [
-  {
-    id: 'user_1',
-    name: 'Nikhil Korada',
-    email: 'nikhil@example.com',
-    role: 'citizen',
-    isVerified: true,
-    phone: '+91-9876543210'
-  },
-  {
-    id: 'user_2',
-    name: 'Admin Officer',
-    email: 'admin@mahasetu.gov.in',
-    role: 'admin',
-    isVerified: true
-  },
-  {
-    id: 'user_officer_emp',
-    name: 'Employment HOD',
-    email: 'employment_officer@mahasetu.gov.in',
-    role: 'department_officer',
-    isVerified: true
-  },
-  {
-    id: 'user_officer_rev',
-    name: 'Revenue HOD',
-    email: 'revenue_officer@mahasetu.gov.in',
-    role: 'department_officer',
-    isVerified: true
-  }
+// Intentionally public, frontend-only demonstration credentials.
+export interface MockUser extends User { password: string }
+export const demoUsers: MockUser[] = [
+  { id: 'citizen-demo-001', name: 'Demo Citizen', email: 'citizen@mahasetu.com', password: 'Citizen@123', role: 'citizen', isVerified: true },
+  { id: 'officer-employment-001', name: 'Employment Department Officer', email: 'employment.officer@mahasetu.com', password: 'Employment@123', role: 'department_officer', department: 'Employment Department', isVerified: true },
+  { id: 'officer-education-001', name: 'Education Department Officer', email: 'education.officer@mahasetu.com', password: 'Education@123', role: 'department_officer', department: 'Education Department', isVerified: true },
+  { id: 'admin-demo-001', name: 'MahaSetu System Administrator', email: 'admin@mahasetu.com', password: 'Admin@123', role: 'admin', isVerified: true }
 ];
+
+const REGISTERED_USERS_KEY = 'mahasetu_mock_citizens';
+function loadRegisteredCitizens(): MockUser[] {
+  try {
+    const stored: unknown = JSON.parse(localStorage.getItem(REGISTERED_USERS_KEY) || '[]');
+    if (!Array.isArray(stored)) return [];
+    return stored.filter((user): user is MockUser =>
+      user && user.role === 'citizen' && typeof user.id === 'string' &&
+      typeof user.name === 'string' && typeof user.email === 'string' && typeof user.password === 'string' &&
+      !demoUsers.some(demo => demo.id === user.id || demo.email === user.email)
+    ).map(({ department, ...user }) => user);
+  } catch { return []; }
+}
+export const mockUsers: MockUser[] = [...demoUsers, ...loadRegisteredCitizens()];
+export function persistRegisteredCitizens() {
+  localStorage.setItem(REGISTERED_USERS_KEY, JSON.stringify(mockUsers.filter(user =>
+    user.role === 'citizen' && !demoUsers.some(demo => demo.id === user.id)
+  )));
+}
 
 export const mockDepartments: Department[] = [
   {
