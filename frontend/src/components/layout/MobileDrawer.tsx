@@ -163,7 +163,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
               onClick={() => {
                 logout();
                 onClose();
-                navigate('/login');
+                navigate(user?.role === 'citizen' ? '/login' : '/admin-login');
               }}
               className="w-full flex items-center justify-center gap-2 py-2 text-xs text-red-600 font-semibold bg-red-50 hover:bg-red-100 rounded-lg transition-colors cursor-pointer"
             >

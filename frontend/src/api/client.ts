@@ -29,7 +29,7 @@ apiClient.interceptors.response.use(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (error: any) => {
     // If token expired or invalid (401), trigger session expired handling
-    if (error?.response?.status === 401 && !window.location.pathname.startsWith('/login')) {
+    if (error?.response?.status === 401 && !['/auth/login', '/auth/register'].includes(error.config?.url)) {
       // Clear token if invalid
       localStorage.removeItem(TOKEN_KEY);
     }

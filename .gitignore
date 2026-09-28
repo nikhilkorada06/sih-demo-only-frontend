@@ -1,0 +1,10 @@
+
+# Dependencies
+node_modules/
+
+# Test output
+test-results/
+playwright-report/
+
+# Build output
+dist/

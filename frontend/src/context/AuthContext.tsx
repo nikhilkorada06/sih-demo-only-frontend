@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef, ReactNode } from 'react';
 import { User, LoginPayload, RegisterPayload } from '../types/auth.types';
 import { authApi } from '../api/auth.api';
 import { getStoredToken, setStoredToken, removeStoredToken } from '../api/client';
@@ -21,25 +21,31 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [token, setToken] = useState<string | null>(getStoredToken());
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const sessionVersion = useRef(0);
+
   const refreshUser = async () => {
+    const version = ++sessionVersion.current;
     const currentToken = getStoredToken();
     if (!currentToken) {
       setUser(null);
+      setToken(null);
       setIsLoading(false);
       return;
     }
 
     try {
       const { user: profile } = await authApi.getMe();
+      if (version !== sessionVersion.current) return;
       setUser(profile);
       setToken(currentToken);
     } catch (error) {
+      if (version !== sessionVersion.current) return;
       // Token expired or invalid
       removeStoredToken();
       setUser(null);
       setToken(null);
     } finally {
-      setIsLoading(false);
+      if (version === sessionVersion.current) setIsLoading(false);
     }
   };
 
@@ -49,6 +55,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (payload: LoginPayload) => {
     const res = await authApi.login(payload);
+    sessionVersion.current++;
+    setIsLoading(false);
     setStoredToken(res.token);
     setToken(res.token);
     setUser(res.user);
@@ -57,6 +65,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const register = async (payload: RegisterPayload) => {
     const res = await authApi.register(payload);
+    sessionVersion.current++;
+    setIsLoading(false);
     setStoredToken(res.token);
     setToken(res.token);
     setUser(res.user);
@@ -64,6 +74,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const logout = () => {
+    sessionVersion.current++;
+    setIsLoading(false);
     removeStoredToken();
     setToken(null);
     setUser(null);

@@ -1,33 +1,51 @@
 import MockAdapter from 'axios-mock-adapter';
 import { apiClient } from '../api/client';
-import { mockUsers, mockDepartments, mockJobs, mockApplications, generateMLMockData } from './data';
+import { mockUsers, mockDepartments, mockJobs, mockApplications, generateMLMockData, persistRegisteredCitizens, MockUser } from './data';
 import { RegisterPayload, LoginPayload } from '../types/auth.types';
 
 // Set a global delay of 1.5 seconds to simulate network latency for the demo
 const mock = new MockAdapter(apiClient, { delayResponse: 1500 });
 
-// --- AUTHENTICATION ---
+// --- FRONTEND-ONLY DEMO AUTHENTICATION ---
+const publicUser = ({ password, ...user }: MockUser) => user;
+const tokenFor = (user: MockUser) => `mock-user:${user.id}`;
+const authenticatedUser = (authorization: unknown) =>
+  mockUsers.find(user => authorization === `Bearer ${tokenFor(user)}`);
+
 mock.onPost('/auth/register').reply((config) => {
   const payload: RegisterPayload = JSON.parse(config.data);
-  const newUser = {
-    id: `user_${Date.now()}`,
-    name: payload.name,
-    email: payload.email,
-    role: 'citizen' as const,
-    isVerified: true
+  const email = payload.email?.trim().toLowerCase();
+  if (!payload.name?.trim() || !email || !payload.password || payload.password.length < 8) {
+    return [400, { message: 'Name, email and a password of at least 8 characters are required.' }];
+  }
+  if (mockUsers.some(user => user.email === email)) {
+    return [409, { message: 'Email is already registered.' }];
+  }
+  const newUser: MockUser = {
+    id: `citizen-${crypto.randomUUID()}`,
+    name: payload.name.trim(), email, password: payload.password,
+    role: 'citizen', isVerified: true,
+    phone: payload.phone, dateOfBirth: payload.dateOfBirth,
+    registrationNumber: payload.registrationNumber
   };
   mockUsers.push(newUser);
-  return [200, { message: 'Registered successfully', token: 'fake-jwt-token-123', user: newUser }];
+  persistRegisteredCitizens();
+  return [200, { message: 'Registered successfully', token: tokenFor(newUser), user: publicUser(newUser) }];
 });
 
 mock.onPost('/auth/login').reply((config) => {
   const payload: LoginPayload = JSON.parse(config.data);
-  const user = mockUsers.find(u => u.email === payload.email) || mockUsers[0]; // fallback to first user
-  return [200, { message: 'Logged in successfully', token: 'fake-jwt-token-123', user, userId: user.id, email: user.email }];
+  const user = mockUsers.find(user => user.email === payload.email?.trim().toLowerCase() && user.password === payload.password);
+  if (!user || (payload.loginType === 'citizen' && user.role !== 'citizen') ||
+      (payload.loginType === 'officer' && user.role === 'citizen')) {
+    return [401, { message: 'Invalid email or password.' }];
+  }
+  return [200, { message: 'Logged in successfully', token: tokenFor(user), user: publicUser(user), userId: user.id, email: user.email }];
 });
 
-mock.onGet('/auth/me').reply(() => {
-  return [200, { user: mockUsers[0] }];
+mock.onGet('/auth/me').reply((config) => {
+  const user = authenticatedUser(config.headers?.Authorization);
+  return user ? [200, { user: publicUser(user) }] : [401, { message: 'Please sign in again.' }];
 });
 
 // --- DEPARTMENTS ---
@@ -56,6 +74,7 @@ mock.onPost('/employment/jobs').reply((config) => {
 mock.onGet(/\/employment\/jobs\/.+/).reply(200, { job: mockJobs[0] });
 
 mock.onGet('/employment/applications').reply(200, { applications: mockApplications });
+mock.onGet('/applications').reply(200, { applications: mockApplications });
 mock.onGet('/applications/all').reply(200, { applications: mockApplications });
 
 // Simulate starting an application
@@ -108,7 +127,10 @@ mock.onPost(/\/applications\/[^/]+\/documents/).reply(200, {
 });
 
 // --- PROFILE ---
-mock.onGet('/profile').reply(200, { profile: mockUsers[0], applicationCount: mockApplications.length });
+mock.onGet('/profile').reply((config) => {
+  const user = authenticatedUser(config.headers?.Authorization);
+  return user ? [200, { profile: publicUser(user), applicationCount: mockApplications.length }] : [401, { message: 'Please sign in again.' }];
+});
 mock.onGet('/profile/documents').reply(200, { documents: [] });
 
 // --- NOTIFICATIONS ---

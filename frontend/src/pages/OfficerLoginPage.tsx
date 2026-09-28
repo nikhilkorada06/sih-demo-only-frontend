@@ -1,3 +1,4 @@
+import { DemoCredentials } from '../components/common/DemoCredentials';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertCircle, ArrowRight, Lock, Mail, ShieldCheck } from 'lucide-react';
@@ -40,7 +41,7 @@ export const OfficerLoginPage: React.FC = () => {
       <div className="max-w-md w-full mx-auto space-y-6">
         <div className="text-center">
           <img src={ASSETS.logo} alt="MahaSetu" className="h-12 w-auto object-contain mx-auto rounded-md" />
-          <h1 className="text-2xl font-bold text-gov-dark mt-4">Officer Portal Login</h1>
+          <h1 className="text-2xl font-bold text-gov-dark mt-4">Officer / Admin Portal Login</h1>
           <p className="text-xs text-gov-textSecondary mt-1">Authorized personnel only</p>
         </div>
         
@@ -74,16 +75,17 @@ export const OfficerLoginPage: React.FC = () => {
             />
             <div className="p-3 bg-gov-lightblue border border-gov-border rounded-lg flex gap-2 text-xs text-gov-textSecondary">
               <ShieldCheck size={16} className="text-green-600 shrink-0"/>
-              This is a restricted portal. Unauthorized access is strictly prohibited.
+              Demo access for department officers and system administrators.
             </div>
             <Button type="submit" className="w-full" isLoading={isLoading} rightIcon={<ArrowRight size={16}/>}>
               Sign In
             </Button>
           </form>
+          <DemoCredentials loginType="officer" disabled={isLoading} onSelect={(email, password) => { setEmail(email); setPassword(password); setError(''); }} />
           
           <div className="pt-4 mt-5 border-t text-center text-xs text-gov-textSecondary">
             <ShieldCheck size={16} className="inline mr-1 text-gov-blue"/>
-            Secure Government Network
+            MahaSetu Demonstration Portal
           </div>
         </div>
       </div>

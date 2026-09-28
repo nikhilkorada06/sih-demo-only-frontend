@@ -14,7 +14,7 @@ export const authApi = {
     return data;
   },
 
-  // Verified accounts receive a JWT directly after password validation
+  // Demo accounts receive a mock user token after local password matching
   async login(payload: LoginPayload): Promise<LoginResponse> {
     const { data } = await apiClient.post<LoginResponse>('/auth/login', payload);
     return data;

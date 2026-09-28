@@ -1,0 +1,141 @@
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-shell {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+  .admin-main {
+    padding: 12px 20px 30px;
+  }
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .stepper {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .site-nav a {
+    padding: 15px;
+  }
+  .hero h1 {
+    font-size: 36px;
+  }
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .wide,
+  .container {
+    width: calc(100% - 32px);
+  }
+  .top-strip .wide {
+    flex-direction: column;
+    gap: 2px;
+  }
+  .site-header {
+    gap: 12px;
+  }
+  .brand-title {
+    font-size: 20px;
+  }
+  .site-header .muted {
+    font-size: 11px;
+  }
+  .seal {
+    width: 48px;
+    height: 54px;
+  }
+  .site-nav {
+    justify-content: flex-start;
+  }
+  .site-nav a {
+    font-size: 12px;
+    padding: 12px;
+  }
+  .hero {
+    padding: 26px;
+  }
+  .hero h1 {
+    font-size: 32px;
+  }
+  .hero-foot {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .grid,
+  .form-grid,
+  .filters {
+    grid-template-columns: 1fr;
+  }
+  .panel,
+  .card {
+    padding: 20px;
+  }
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+  h1 {
+    font-size: 28px;
+  }
+  .admin-shell {
+    grid-template-columns: 1fr;
+  }
+  .admin-sidebar {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+  .admin-sidebar a {
+    font-size: 12px;
+    padding: 10px;
+    margin: 0;
+  }
+  .admin-main {
+    padding: 8px 16px 30px;
+  }
+  .kv {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  .kv dd {
+    margin-bottom: 10px;
+  }
+  .tracking-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .architecture {
+    flex-direction: column;
+  }
+  .architecture span {
+    transform: rotate(90deg);
+  }
+  .bar-row {
+    grid-template-columns: 110px minmax(0, 1fr) 20px;
+    gap: 8px;
+  }
+  .stepper {
+    gap: 5px;
+  }
+  .stepper li {
+    font-size: 11px;
+    padding: 8px;
+  }
+  .stat {
+    padding: 16px;
+  }
+  .tracker-id {
+    font-size: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
