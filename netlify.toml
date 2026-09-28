@@ -1,0 +1,21 @@
+[build]
+  command = "bash build.sh"
+  publish = "dist"
+
+# Single Page App routing for Mock Education
+[[redirects]]
+  from = "/education/*"
+  to = "/education/index.html"
+  status = 200
+
+# Single Page App routing for Mock Employment
+[[redirects]]
+  from = "/employment/*"
+  to = "/employment/index.html"
+  status = 200
+
+# Single Page App routing for Main Frontend
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
